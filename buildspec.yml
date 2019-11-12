@@ -7,4 +7,5 @@ environment_variables:
 phases:
   build:
     commands:
+      - docker images
       - docker image build --no-cache --rm -t codebuild-test .
