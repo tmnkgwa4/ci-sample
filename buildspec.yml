@@ -1,11 +1,13 @@
 version: 0.2
 
-environment_variables:
-  plaintext:
-    DOCKER_BUILDKIT: "1"
-
 phases:
+  pre_build:
+    commands:
+      - $(aws ecr get-login --no-include-email --region ap-northeast-1)
+      - docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
   build:
     commands:
-      - docker images
-      - docker image build --no-cache --rm -t codebuild-test .
+      - docker build --cache-from $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG -f .
+  post_build:
+    commands:
+      - docker push ${REPO_DOMEIN}/${IMAGE_REPO_NAME}:base -t ${IMAGE_REPO_NAME}:base -f ./config/docker/Dockerfile-rails-base
