@@ -1,9 +1,7 @@
-FROM ruby:2.6.3
-ENV LANG C.UTF-8
+FROM php:5.3-apache
 
-RUN gem install bundler
+EXPOSE 80
 
-WORKDIR /tmp
-ADD Gemfile Gemfile
-ADD Gemfile.lock Gemfile.lock
-RUN bundle install
+COPY start-apache2.sh /start-apache2.sh
+
+ENTRYPOINT ["/start-apache2.sh"]
