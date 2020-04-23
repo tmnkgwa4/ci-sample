@@ -5,10 +5,8 @@ on:
 
 jobs:
   build:
-    name: Build runner
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v1
       - name: Build container image
         run: make build
       - name: Docker Login
